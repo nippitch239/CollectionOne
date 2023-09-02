@@ -1,37 +1,44 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import { BrowserRouter, Routes, Route } from "react-router-dom"; // Correct imports
-import App from "./App.jsx";
-import Login from "./components/Login.jsx";
-import Register from "./components/Register.jsx";
-import Home from "./components/Home.jsx";
-import ProtectedRoute from "./auth/ProtectedRoute.jsx";
+import ReactDOM from "react-dom/client";
+import App from "./App.tsx";
+import Login from "./components/Login";
+import Register from "./components/Register.tsx";
+import Home from "./components/Home.tsx";
+import ProtectedRoute from "./auth/ProtectedRoute.tsx";
 
 import "bootstrap/dist/css/bootstrap.min.css";
+
 import "./index.css";
-import { UserAuthContextProvider } from "./context/UserAuthContext.jsx";
+import { UserAuthContextProvider } from "./context/UserAuthContext.tsx";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-const rootElement = document.getElementById("root");
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/register",
+    element: <Register />,
+  },
+  {
+    path: "/home",
+    element: (
+      <ProtectedRoute>
+        <Home />
+      </ProtectedRoute>
+    ),
+  },
+]);
 
-ReactDOM.render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <UserAuthContextProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<App />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route
-            path="/home"
-            element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-      </BrowserRouter>
+      <RouterProvider router={router} />
     </UserAuthContextProvider>
-  </React.StrictMode>,
-  rootElement
+  </React.StrictMode>
 );

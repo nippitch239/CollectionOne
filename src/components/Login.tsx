@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Form, Alert } from "react-bootstrap";
-import { useUserAuth } from "../context/UserAuthContext";
+import { useUserAuth } from "../context/UserAuthContext.tsx";
 import style from "../styles/Login.module.css";
 
 // Define an interface for the user authentication context
@@ -19,22 +19,22 @@ function Login() {
   const { logIn }: UserAuthContextType = useUserAuth() as UserAuthContextType;
   const navigate = useNavigate();
 
- const handleSubmit = async (e: React.FormEvent) => {
-   if (!email || !password) {
-     setError("Please enter both email and password");
-     return;
-   }
+  const handleSubmit = async (e: React.FormEvent) => {
+    if (!email || !password) {
+      setError("Please enter both email and password");
+      return;
+    }
 
-   e.preventDefault();
-   setError(""); // Clear the error message
-   try {
-     await logIn(email, password);
-     navigate("/home");
-   } catch (err) {
-     setError((err as Error).message); // Use type assertion here
-     console.log(err);
-   }
- };
+    e.preventDefault();
+    setError(""); // Clear the error message
+    try {
+      await logIn(email, password);
+      navigate("/home");
+    } catch (err) {
+      setError((err as Error).message); // Use type assertion here
+      console.log(err);
+    }
+  };
 
   return (
     <div className={style.contain}>

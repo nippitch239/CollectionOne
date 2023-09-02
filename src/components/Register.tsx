@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Form, Alert } from "react-bootstrap";
+import { Alert } from "react-bootstrap";
 import style from "../styles/Register.module.css";
-import { useUserAuth } from "../context/UserAuthContext";
+import { useUserAuth } from "../context/UserAuthContext.tsx";
 
 function Register() {
   const [email, setEmail] = useState("");
@@ -14,10 +14,44 @@ function Register() {
 
   const navigate = useNavigate();
 
+  const isAlphaNumericWithUnderscore = (input) => /^[a-zA-Z0-9_]*$/.test(input);
+
+  const handleDisplayNameChange = (e) => {
+    const newValue = e.target.value;
+    if (isAlphaNumericWithUnderscore(newValue) && newValue.length <= 16) {
+      setDisplayName(newValue);
+    }
+  };
+
+ const handleEmailChange = (e) => {
+   const newValue = e.target.value;
+
+   // Use a regular expression to allow only letters, numbers, and the @ symbol
+   const validEmail = /^[a-zA-Z0-9@.]*$/;
+
+   if (validEmail.test(newValue) || newValue === "") {
+     setEmail(newValue);
+   }
+ };
+
+  const handlePasswordChange = (e) => {
+    const newValue = e.target.value;
+    if (!/[^a-zA-Z0-9@]/.test(newValue) && newValue.length <= 13) {
+      setPassword(newValue);
+    }
+  };
+
+  const handleConPasswordChange = (e) => {
+    const newValue = e.target.value;
+    if (!/[^a-zA-Z0-9@]/.test(newValue) && newValue.length <= 13) {
+      setConPassword(newValue);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!email || !password || !displayName || !conPassword) {
+    if (!displayName || !email || !password || !conPassword) {
       setError("Please enter all the required information.");
       return;
     }
@@ -46,7 +80,7 @@ function Register() {
   return (
     <div className={style.contain}>
       <div className={style.InsideContain}>
-        <Form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <p className={style.textHead}>Join us!</p>
           {error && <Alert variant="danger">{error}</Alert>}
           <div className={style.setBoxMargin}>
@@ -54,15 +88,15 @@ function Register() {
               type="text"
               placeholder="Username"
               value={displayName}
-              onChange={(e) => setDisplayName(e.target.value)}
+              onChange={handleDisplayNameChange}
             />
           </div>
           <div className={style.setBoxMargin}>
             <input
-              type="email"
+              type="text"
               placeholder="Email address @tupp.ac.th"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleEmailChange}
             />
           </div>
 
@@ -71,7 +105,7 @@ function Register() {
               type="password"
               placeholder="Password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handlePasswordChange}
             />
           </div>
 
@@ -80,7 +114,7 @@ function Register() {
               type="password"
               placeholder="Confirm Password"
               value={conPassword}
-              onChange={(e) => setConPassword(e.target.value)}
+              onChange={handleConPasswordChange}
             />
           </div>
 
@@ -89,7 +123,7 @@ function Register() {
               Sign Up
             </button>
           </div>
-        </Form>
+        </form>
 
         <div className={style.test}>
           Already have an account? <Link to="/login">Log in</Link>

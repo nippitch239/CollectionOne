@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { useUserAuth } from "../context/UserAuthContext";
-import { Button } from "react-bootstrap";
+import { useUserAuth } from "../context/UserAuthContext.tsx";
+import style from "../styles/Home.module.css";
 
 // Define a type alias for the user authentication context
 type UserAuthContext = {
@@ -19,23 +19,25 @@ function Home() {
 
   const navigate = useNavigate();
 
- const handleLogout = async () => {
-   try {
-     await logOut();
-     navigate("/");
-   } catch (err) {
-     console.log((err as Error).message); // Type assertion here
-   }
- };
+  const handleLogout = async () => {
+    try {
+      await logOut();
+      navigate("/");
+    } catch (err) {
+      console.log((err as Error).message); // Type assertion here
+    }
+  };
 
   return (
-    <div>
-      <h2>Welcome to the home page</h2>
-      <p>Hi, {user?.email}</p>
-      <p>Hi, {user?.displayName}</p>
-      <Button onClick={handleLogout} variant="danger">
-        Logout
-      </Button>
+    <div className={style.Contain}>
+      <div className={style.Text}>
+        <h2>Welcome to the Home page</h2>
+        <p className={style.Gmail}>Your Gmail is : {user?.email}</p>
+        <p className={style.prgText}>
+          Hi, <span>{user?.displayName}</span>
+        </p>
+        <button onClick={handleLogout}>Logout</button>
+      </div>
     </div>
   );
 }
